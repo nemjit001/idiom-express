@@ -1,0 +1,25 @@
+# Generated dirs
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# IDE dirs
+.idea/
+.vscode/
+.vs/
+
+# Generated files
+Makefile
+*.code-workspace
+*.ignore
+*.VC.db
+*.opensdf
+*.opendb
+*.sdf
+*.sln
+*.slnx
+*.vsconfig
+*.suo
+*.xcodeproj
+*.xcworkspace
