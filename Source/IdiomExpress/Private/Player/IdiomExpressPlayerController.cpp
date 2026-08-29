@@ -9,7 +9,7 @@
 DEFINE_LOG_CATEGORY_STATIC(LogIdiomExpressPlayerController, Log, Log);
 
 void AIdiomExpressPlayerController::BeginPlay()
-{
+{	
 	if (GameplayInputMapping.IsNull())
 	{
 		UE_LOG(LogIdiomExpressPlayerController, Error, TEXT("GameplayInputMapping must not be null!"));
