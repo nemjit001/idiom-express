@@ -7,7 +7,7 @@
 #include "IdiomExpressPlayerController.generated.h"
 
 /**
- * Player Controller for Idiom Express player characters
+ * Player Controller for Idiom Express player characters.
  */
 UCLASS()
 class IDIOMEXPRESS_API AIdiomExpressPlayerController : public APlayerController
