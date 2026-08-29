@@ -20,6 +20,15 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
+public:
+	UFUNCTION(BlueprintCallable, Category = "Actor|Interaction")
+	virtual void OnEnterInteractionRegion(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
+	UFUNCTION(BlueprintCallable, Category = "Actor|Interaction")
+	virtual void OnLeaveInteractionRegion(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex);
+	
 protected:
 	UPROPERTY(Category = "Actor", BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<class USphereComponent> InteractionRegion;
