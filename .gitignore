@@ -1,4 +1,5 @@
-# Generated dirs
+# Build dirs
+Build/
 Binaries/
 DerivedDataCache/
 Intermediate/

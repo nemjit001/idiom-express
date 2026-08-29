@@ -29,10 +29,6 @@ void AIdiomExpressCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 void AIdiomExpressCharacter::Interact()
 {
-#if		UE_BUILD_DEVELOPMENT
-	if (GEngine) {
-		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 1.0F, FColor::Green, TEXT("Interact triggered"));
-	}
-#endif // UE_BUILD_DEVELOPMENT
+	//
 }
 
