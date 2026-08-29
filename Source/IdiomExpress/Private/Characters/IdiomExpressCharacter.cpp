@@ -32,3 +32,13 @@ void AIdiomExpressCharacter::Interact()
 	//
 }
 
+void AIdiomExpressCharacter::OnEnterInteractionRegion(AIdiomExpressInteractableActor* InteractableActor)
+{
+	//
+}
+	
+void AIdiomExpressCharacter::OnLeaveInteractionRegion(AIdiomExpressInteractableActor* InteractableActor)
+{
+	//
+}
+
