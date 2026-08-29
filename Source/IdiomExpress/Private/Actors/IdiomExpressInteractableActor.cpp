@@ -32,6 +32,24 @@ void AIdiomExpressInteractableActor::BeginPlay()
 	
 }
 
+void AIdiomExpressInteractableActor::DoInteraction()
+{
+	if (OnActorInteractionReceived.IsBound())
+	{
+		UE_LOGF(LogIdiomExpressInteractableActor, Log, "DoInteraction called on %ls", *GetName());
+		OnActorInteractionReceived.Broadcast();
+	}
+}
+
+void AIdiomExpressInteractableActor::NotifyIsAimedAt()
+{
+	if (OnActorAimedAt.IsBound())
+	{
+		UE_LOGF(LogIdiomExpressInteractableActor, Log, "Actor %ls is being aimed at", *GetName());
+		OnActorAimedAt.Broadcast();
+	}
+}
+
 void AIdiomExpressInteractableActor::OnEnterInteractionRegion(
 	UPrimitiveComponent* OverlappedComponent,
 	AActor* OtherActor,

@@ -7,6 +7,7 @@
 #include "IdiomExpressCharacter.generated.h"
 
 class AIdiomExpressInteractableActor;
+class UIdiomExpressInteractionComponent;
 
 /**
  * Base Character class for Idiom Express.
@@ -23,7 +24,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	/** This blueprint function implements Character-World interaction functionality. */
+	/** Handle player interaction input. */
 	UFUNCTION(BlueprintCallable, Category = "Character|Interaction")
 	virtual void Interact();
 	
@@ -34,4 +35,21 @@ public:
 	/** Handle the leaving of an interactable region. */
 	UFUNCTION(BlueprintCallable, Category = "Character|Interaction")
 	virtual void OnLeaveInteractionRegion(AIdiomExpressInteractableActor* InteractableActor);
+	
+	/** Get the interaction component for the character. */
+	UFUNCTION(BlueprintCallable, Category = "Character|Interaction")
+	virtual UIdiomExpressInteractionComponent* GetInteractionComponent() const;
+
+protected:
+	/** Do the player interaction line trace, triggering an interaction on hit. */
+	virtual void DoInteractionLineTrace();
+	
+protected:
+	UPROPERTY(Category = "Character", BlueprintReadOnly, VisibleAnywhere)
+	TObjectPtr<UIdiomExpressInteractionComponent> InteractionComponent;
 };
+
+inline UIdiomExpressInteractionComponent* AIdiomExpressCharacter::GetInteractionComponent() const
+{
+	return InteractionComponent;
+}
