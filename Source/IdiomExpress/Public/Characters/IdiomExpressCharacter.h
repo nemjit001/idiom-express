@@ -43,11 +43,11 @@ public:
 	virtual UIdiomExpressInteractionComponent* GetInteractionComponent() const;
 
 protected:
-	/** Do the player aim test line trace, triggering UI updates on hit. */
-	virtual void DoAimTestLineTrace();
-	
-	/** Do the player interaction line trace, triggering an interaction on hit. */
-	virtual void DoInteractionLineTrace();
+	/**
+	 * Do an interaction line trace from the player's camera.
+	 * @param InteractOnHit Attempt to interact with the hit target on hit.
+	 */
+	virtual void DoInteractionLineTrace(bool InteractOnHit);
 	
 protected:
 	// Scene components
