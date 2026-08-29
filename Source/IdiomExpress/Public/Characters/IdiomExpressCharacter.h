@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "IdiomExpressCharacter.generated.h"
 
+class UCameraComponent;
 class AIdiomExpressInteractableActor;
 class UIdiomExpressInteractionComponent;
 
@@ -23,6 +24,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutRotation) const override;
 	
 	/** Handle player interaction input. */
 	UFUNCTION(BlueprintCallable, Category = "Character|Interaction")
@@ -41,10 +43,18 @@ public:
 	virtual UIdiomExpressInteractionComponent* GetInteractionComponent() const;
 
 protected:
+	/** Do the player aim test line trace, triggering UI updates on hit. */
+	virtual void DoAimTestLineTrace();
+	
 	/** Do the player interaction line trace, triggering an interaction on hit. */
 	virtual void DoInteractionLineTrace();
 	
 protected:
+	// Scene components
+	UPROPERTY(Category = "Character", BlueprintReadOnly, VisibleAnywhere)
+	TObjectPtr<UCameraComponent> PlayerCamera;
+	
+	// Actor components
 	UPROPERTY(Category = "Character", BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<UIdiomExpressInteractionComponent> InteractionComponent;
 };

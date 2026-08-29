@@ -14,12 +14,18 @@ AIdiomExpressInteractableActor::AIdiomExpressInteractableActor()
 	PrimaryActorTick.bStartWithTickEnabled = false;
 	
 	// Create interaction region
-	InteractionRegion = CreateDefaultSubobject<USphereComponent>("InteractionRegion");
-	SetRootComponent(InteractionRegion);
+	ActorCollision = CreateDefaultSubobject<USphereComponent>("ActorCollision");
+	ActorCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	ActorCollision->SetCollisionProfileName("BlockAll");
+	SetRootComponent(ActorCollision);
 	
 	// Create actor mesh
 	ActorMesh = CreateDefaultSubobject<USkeletalMeshComponent>("ActorMesh");
-	ActorMesh->SetupAttachment(InteractionRegion);
+	ActorMesh->SetupAttachment(ActorCollision);
+	
+	// Create interaction region
+	InteractionRegion = CreateDefaultSubobject<USphereComponent>("InteractionRegion");
+	InteractionRegion->SetupAttachment(ActorCollision);
 	
 	// Set up interaction region overlap detection
 	InteractionRegion->OnComponentBeginOverlap.AddDynamic(this, &AIdiomExpressInteractableActor::OnEnterInteractionRegion);
@@ -30,24 +36,6 @@ void AIdiomExpressInteractableActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
-}
-
-void AIdiomExpressInteractableActor::DoInteraction()
-{
-	if (OnActorInteractionReceived.IsBound())
-	{
-		UE_LOGF(LogIdiomExpressInteractableActor, Log, "DoInteraction called on %ls", *GetName());
-		OnActorInteractionReceived.Broadcast();
-	}
-}
-
-void AIdiomExpressInteractableActor::NotifyIsAimedAt()
-{
-	if (OnActorAimedAt.IsBound())
-	{
-		UE_LOGF(LogIdiomExpressInteractableActor, Log, "Actor %ls is being aimed at", *GetName());
-		OnActorAimedAt.Broadcast();
-	}
 }
 
 void AIdiomExpressInteractableActor::OnEnterInteractionRegion(

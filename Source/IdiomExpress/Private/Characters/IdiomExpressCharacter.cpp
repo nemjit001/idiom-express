@@ -4,6 +4,8 @@
 #include "Characters/IdiomExpressCharacter.h"
 
 #include "Actors/IdiomExpressInteractableActor.h"
+#include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/IdiomExpressInteractionComponent.h"
 
 #define CHARACTER_INTERACTION_LINE_TRACE_LENGTH 1'000.0F
@@ -14,6 +16,16 @@ AIdiomExpressCharacter::AIdiomExpressCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Get player capsule
+	UCapsuleComponent* Capsule = GetCapsuleComponent();
+	
+	// Set up camera component
+	PlayerCamera = CreateDefaultSubobject<UCameraComponent>("PlayerCamera");
+	PlayerCamera->SetupAttachment(Capsule);
+	PlayerCamera->SetEnableFirstPersonScale(true);
+	PlayerCamera->SetEnableFirstPersonFieldOfView(true);
+	PlayerCamera->bUsePawnControlRotation = true;
+	
 	// Set up interaction component
 	InteractionComponent = CreateDefaultSubobject<UIdiomExpressInteractionComponent>("InteractionComponent");
 }
@@ -28,7 +40,7 @@ void AIdiomExpressCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	// Handle aim raycast if in interactable region
+	// Handle aim test line trace if in interactable region
 	// TODO
 
 	// Handle player interaction input
@@ -50,6 +62,13 @@ void AIdiomExpressCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 }
 
+void AIdiomExpressCharacter::GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutRotation) const
+{
+	// Get player camera location and rotation :)
+	OutLocation = PlayerCamera->GetComponentLocation();
+	OutRotation = PlayerCamera->GetComponentRotation();
+}
+
 void AIdiomExpressCharacter::Interact()
 {
 	// Set the internal interacting value
@@ -60,34 +79,65 @@ void AIdiomExpressCharacter::Interact()
 
 void AIdiomExpressCharacter::OnEnterInteractionRegion(AIdiomExpressInteractableActor* InteractableActor)
 {
-	// TODO(nemjit001): register to the interaction events of the interactable actor
-	//  [ ] OnAimAtTarget (trigger UI updates) 
-	//  [ ] OnActorInteractionReceived (trigger interaction logic)
+	//
 }
 	
 void AIdiomExpressCharacter::OnLeaveInteractionRegion(AIdiomExpressInteractableActor* InteractableActor)
 {
-	// TODO(nemjit001): deregister from the interaction events of the interactable actor
+	//
 }
 
-void AIdiomExpressCharacter::DoInteractionLineTrace()
+void AIdiomExpressCharacter::DoAimTestLineTrace()
 {
+	// Get start and end points for the aim test trace
+	FVector ViewOrigin{};
+	FRotator ViewDirection{};
+	GetActorEyesViewPoint(ViewOrigin, ViewDirection);
+	FVector const TraceEndPoint = ViewOrigin + ViewDirection.Vector() * CHARACTER_INTERACTION_LINE_TRACE_LENGTH;
+	
 	// Get the world for the actor
 	UWorld* World = GetWorld();
 	check(World);
 	
+	// Do line trace
+	FHitResult TraceResult{};
+	UE_LOG(LogIdiomExpressCharacter, Log, TEXT("Performing aim test line trace"));
+	if (World->LineTraceSingleByChannel(TraceResult, ViewOrigin, TraceEndPoint, ACTOR_INTERACTION_COLLISION_CHANNEL))
+	{
+		// Check if the trace is a valid blocking hit
+		UE_LOG(LogIdiomExpressCharacter, Log, TEXT("Testing valid blocking hit"));
+		if (!TraceResult.IsValidBlockingHit()) {
+			return;
+		}
+		
+		// Interact with actor if it is interactable.
+		UE_LOG(LogIdiomExpressCharacter, Log, TEXT("Valid blocking hit found"));
+		if (auto* InteractableActor = Cast<AIdiomExpressInteractableActor>(TraceResult.GetActor()))
+		{			
+			// TODO(nemjit001): Enable aim prompt in player HUD
+		}
+	}
+}
+
+void AIdiomExpressCharacter::DoInteractionLineTrace()
+{
 	// Get start and end points for the interaction trace
 	FVector ViewOrigin{};
 	FRotator ViewDirection{};
 	GetActorEyesViewPoint(ViewOrigin, ViewDirection);
 	FVector const TraceEndPoint = ViewOrigin + ViewDirection.Vector() * CHARACTER_INTERACTION_LINE_TRACE_LENGTH;
 	
-	// Do line trace
+	// Get the world for the actor
+	UWorld* World = GetWorld();
+	check(World);
+	
+	// Do line trace	
 	FHitResult TraceResult{};
-	UE_LOG(LogIdiomExpressCharacter, Log, TEXT("Performing interaction line trace"));
+	UE_LOG(LogIdiomExpressCharacter, Log, TEXT("Performing interaction line trace"));	
 	if (World->LineTraceSingleByChannel(TraceResult, ViewOrigin, TraceEndPoint, ACTOR_INTERACTION_COLLISION_CHANNEL))
-	{
+	{		
 		// Check if the trace is a valid blocking hit
+		UE_LOG(LogIdiomExpressCharacter, Log, TEXT("Testing valid blocking hit"));
 		if (!TraceResult.IsValidBlockingHit()) {
 			return;
 		}
@@ -101,7 +151,8 @@ void AIdiomExpressCharacter::DoInteractionLineTrace()
 				*GetName(),
 				*InteractableActor->GetName()
 			);
-			InteractableActor->DoInteraction();
+			
+			// TODO(nemjit001): Perform interaction with actor
 		}
 	}
 }
