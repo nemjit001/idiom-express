@@ -17,7 +17,26 @@ class IDIOMEXPRESS_API AIdiomExpressPlayerController : public APlayerController
 protected:
 	virtual void BeginPlay() override;
 	
+public:
+	/** Attempt to create the player gameplay hud. */
+	UFUNCTION(BlueprintCallable, Category = "Player|UI")
+	virtual void TryCreateHud();
+	
+	/**
+	 * Get the gameplay hud instance.
+	 * @return
+	 */
+	UFUNCTION(BlueprintPure, Category = "Player|UI")
+	virtual class UUserWidget* GetGameplayHud() const { return GameplayHudInstance; }
+	
 protected:
-	UPROPERTY(Category = "Player Input", BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(Category = "Player|Input", BlueprintReadWrite, EditAnywhere)
 	TSoftObjectPtr<class UInputMappingContext> GameplayInputMapping;
+	
+	UPROPERTY(Category = "Player|UI", BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<class UUserWidget> GameplayHudClass;
+	
+private:
+	UPROPERTY(Transient)
+	TObjectPtr<class UUserWidget> GameplayHudInstance;
 };

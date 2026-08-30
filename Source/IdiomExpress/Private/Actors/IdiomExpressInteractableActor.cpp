@@ -57,7 +57,7 @@ void AIdiomExpressInteractableActor::OnEnterInteractionRegion(
 	if (auto* Character = Cast<AIdiomExpressCharacter>(OtherActor))
 	{
 		// Notify character that it entered an interactable region
-		Character->OnEnterInteractionRegion(this);
+		Character->OnEnterInteractionRegion();
 	}
 }
 
@@ -78,6 +78,6 @@ void AIdiomExpressInteractableActor::OnLeaveInteractionRegion(
 	if (auto* Character = Cast<AIdiomExpressCharacter>(OtherActor))
 	{
 		// Notify character that it left an interactable region
-		Character->OnLeaveInteractionRegion(this);
+		Character->OnLeaveInteractionRegion();
 	}
 }

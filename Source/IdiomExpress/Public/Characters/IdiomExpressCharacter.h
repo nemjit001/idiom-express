@@ -7,7 +7,6 @@
 #include "IdiomExpressCharacter.generated.h"
 
 class UCameraComponent;
-class AIdiomExpressInteractableActor;
 class UIdiomExpressInteractionComponent;
 
 /**
@@ -32,11 +31,11 @@ public:
 	
 	/** Handle the entering of an interactable region. */
 	UFUNCTION(BlueprintCallable, Category = "Character|Interaction")
-	virtual void OnEnterInteractionRegion(AIdiomExpressInteractableActor* InteractableActor);
+	virtual void OnEnterInteractionRegion();
 	
 	/** Handle the leaving of an interactable region. */
 	UFUNCTION(BlueprintCallable, Category = "Character|Interaction")
-	virtual void OnLeaveInteractionRegion(AIdiomExpressInteractableActor* InteractableActor);
+	virtual void OnLeaveInteractionRegion();
 	
 	/** Get the interaction component for the character. */
 	UFUNCTION(BlueprintCallable, Category = "Character|Interaction")
