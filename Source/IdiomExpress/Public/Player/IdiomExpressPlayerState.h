@@ -22,9 +22,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "PlayerState|UI")
 	virtual bool GetShowInteractionPrompt();
 	
+	/** Get the held currency amount. */
+	UFUNCTION(BlueprintCallable, Category = "PlayerState|UI")
+	virtual int64 GetHeldCurrencyAmount();
+	
 	/** Handle a change in the interaction prompt. */
 	UFUNCTION(BlueprintCallable, Category = "PlayerState|UI")
 	virtual void OnShowInteractionPromptChanged(bool Show);
+	
+	/** Handle a change in the held currency amount. */
+	virtual void OnHeldCurrencyAmountChanged(int64 Value);
 	
 private:
 	UPROPERTY(Transient)

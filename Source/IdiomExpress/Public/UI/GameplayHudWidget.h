@@ -17,4 +17,6 @@ class IDIOMEXPRESS_API UGameplayHudWidget : public UUserWidget
 public:	
 	UFUNCTION(BlueprintImplementableEvent, Category = "UI|Gameplay")
 	void ShowInteractionPrompt(bool Show);
+	UFUNCTION(BlueprintImplementableEvent, Category = "UI|Gameplay")
+	void SetHeldCurrencyAmount(int64 Value);
 };

@@ -5,6 +5,7 @@
 
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
+#include "Game/IdiomExpressGameState.h"
 #include "Player/IdiomExpressPlayerState.h"
 #include "UI/GameplayHudWidget.h"
 
@@ -49,9 +50,18 @@ void AIdiomExpressPlayerController::TryCreateHud()
 		return;
 	}
 	
-	// Get the player state for populating UI
+	// Get the owning world
+	UWorld* World = GetWorld();
+	check(World);
+	
+	// Get the player state and game state for populating UI
 	auto* PS = GetPlayerState<AIdiomExpressPlayerState>();
 	if (!PS) {
+		return;
+	}
+	
+	auto* GS = World->GetGameState<AIdiomExpressGameState>();
+	if (!GS) {
 		return;
 	}
 	
@@ -62,4 +72,5 @@ void AIdiomExpressPlayerController::TryCreateHud()
 	
 	// Set initial gameplay HUD state
 	GameplayHudInstance->ShowInteractionPrompt(PS->GetShowInteractionPrompt());
+	GameplayHudInstance->SetHeldCurrencyAmount(GS->GetHeldCurrencyAmount());
 }
