@@ -117,7 +117,7 @@ void AIdiomExpressCharacter::DoInteractionLineTrace(bool InteractOnHit)
 		UE_LOG(LogIdiomExpressCharacter, Log, TEXT("Valid blocking hit found"));
 		if (auto* InteractableActor = Cast<AIdiomExpressInteractableActor>(TraceResult.GetActor()))
 		{
-			// TODO(nemjit001): Display interaction UI
+			// TODO(nemjit001): Display interaction UI by emitting a delegate broadcast?
 			
 			if (InteractOnHit)
 			{
@@ -127,7 +127,8 @@ void AIdiomExpressCharacter::DoInteractionLineTrace(bool InteractOnHit)
 					*InteractableActor->GetName()
 				);
 				
-				// TODO(nemjit001): Perform interaction with hit actor
+				// Interact with actor :)
+				InteractableActor->OnInteraction(this);
 			}
 		}
 	}

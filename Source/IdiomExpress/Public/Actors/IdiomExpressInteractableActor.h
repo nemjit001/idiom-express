@@ -24,6 +24,7 @@ protected:
 	virtual void BeginPlay() override;
 	
 public:	
+	
 	/** Handle an actor entering the interaction region of the actor. */
 	UFUNCTION(BlueprintCallable, Category = "Actor|Interaction")
 	virtual void OnEnterInteractionRegion(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -33,6 +34,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Actor|Interaction")
 	virtual void OnLeaveInteractionRegion(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex);
+	
+	/** Handle the interaction for this interactable object. */
+	UFUNCTION(BlueprintImplementableEvent, Category = "Actor|Interaction")
+	void OnInteraction(class AIdiomExpressCharacter* Character);
 	
 protected:	
 	UPROPERTY(Category = "Actor", BlueprintReadOnly, VisibleAnywhere)
