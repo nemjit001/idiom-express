@@ -41,18 +41,16 @@ void AIdiomExpressCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// Handle player interaction input
-	if (auto* InteractionComp = GetInteractionComponent())
+	if (auto* Interaction = GetInteractionComponent())
 	{
-		// Send aim test line trace
-		// TODO: only send line traces if in valid interactable region (counter?)
-		DoInteractionLineTrace(false);
-		
 		// Consume interacting value
-		const bool bIsInteracting = InteractionComp->ConsumeIsInteractingValue();
-		if (bIsInteracting)
+		const bool InteractOnHit = Interaction->ConsumeIsInteractingValue();
+		
+		// Only process interactions if in interaction region
+		if (Interaction->IsInInteractionRegion())
 		{
-			// Send interaction line trace
-			DoInteractionLineTrace(true);
+			// Send aim test line trace and trigger interaction if input is pressed
+			DoInteractionLineTrace(InteractOnHit);
 		}
 	}
 }
@@ -80,12 +78,16 @@ void AIdiomExpressCharacter::Interact()
 
 void AIdiomExpressCharacter::OnEnterInteractionRegion()
 {
-	//
+	if (auto* Interaction = GetInteractionComponent()) {
+		Interaction->EnterInteractionRegion();
+	}
 }
 	
 void AIdiomExpressCharacter::OnLeaveInteractionRegion()
 {
-	//
+	if (auto* Interaction = GetInteractionComponent()) {
+		Interaction->LeaveInteractionRegion();
+	}
 }
 
 void AIdiomExpressCharacter::DoInteractionLineTrace(bool InteractOnHit)
