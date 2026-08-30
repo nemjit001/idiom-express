@@ -31,6 +31,7 @@ public:
 	virtual void OnShowInteractionPromptChanged(bool Show);
 	
 	/** Handle a change in the held currency amount. */
+	UFUNCTION(BlueprintCallable, Category = "PlayerState|UI")
 	virtual void OnHeldCurrencyAmountChanged(int64 Value);
 	
 private:
