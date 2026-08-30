@@ -27,16 +27,16 @@ public:
 	 * @return
 	 */
 	UFUNCTION(BlueprintPure, Category = "Player|UI")
-	virtual class UUserWidget* GetGameplayHud() const { return GameplayHudInstance; }
+	virtual class UGameplayHudWidget* GetGameplayHud() const { return GameplayHudInstance; }
 	
 protected:
 	UPROPERTY(Category = "Player|Input", BlueprintReadWrite, EditAnywhere)
 	TSoftObjectPtr<class UInputMappingContext> GameplayInputMapping;
 	
 	UPROPERTY(Category = "Player|UI", BlueprintReadWrite, EditAnywhere)
-	TSubclassOf<class UUserWidget> GameplayHudClass;
+	TSubclassOf<class UGameplayHudWidget> GameplayHudClass;
 	
 private:
 	UPROPERTY(Transient)
-	TObjectPtr<class UUserWidget> GameplayHudInstance;
+	TObjectPtr<class UGameplayHudWidget> GameplayHudInstance;
 };

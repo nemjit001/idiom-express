@@ -5,12 +5,15 @@
 
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
-#include "Blueprint/UserWidget.h"
+#include "Player/IdiomExpressPlayerState.h"
+#include "UI/GameplayHudWidget.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogIdiomExpressPlayerController, Log, Log);
 
 void AIdiomExpressPlayerController::BeginPlay()
-{	
+{
+	Super::BeginPlay();
+	
 	// Validate input mapping contexts
 	if (GameplayInputMapping.IsNull())
 	{
@@ -34,6 +37,11 @@ void AIdiomExpressPlayerController::BeginPlay()
 
 void AIdiomExpressPlayerController::TryCreateHud()
 {
+	// Only create hud once
+	if (GameplayHudInstance) {
+		return;
+	}
+	
 	// Validate hud class
 	if (!IsValid(GameplayHudClass))
 	{
@@ -41,11 +49,17 @@ void AIdiomExpressPlayerController::TryCreateHud()
 		return;
 	}
 	
-	// Create HUD widget instance
-	GameplayHudInstance = CreateWidget(this, GameplayHudClass);
-	if (GameplayHudInstance)
-	{
-		UE_LOGF(LogIdiomExpressPlayerController, Log, "Created GameplayHudClass for player controller %ls", *GetName());
-		GameplayHudInstance->AddToViewport();
+	// Get the player state for populating UI
+	auto* PS = GetPlayerState<AIdiomExpressPlayerState>();
+	if (!PS) {
+		return;
 	}
+	
+	// Create HUD widget instance
+	UE_LOGF(LogIdiomExpressPlayerController, Log, "Creating GameplayHudClass for player controller %ls", *GetName());
+	GameplayHudInstance = CreateWidget<UGameplayHudWidget>(this, GameplayHudClass);
+	GameplayHudInstance->AddToViewport();
+	
+	// Set initial gameplay HUD state
+	GameplayHudInstance->ShowInteractionPrompt(PS->GetShowInteractionPrompt());
 }

@@ -78,6 +78,7 @@ void AIdiomExpressCharacter::Interact()
 
 void AIdiomExpressCharacter::OnEnterInteractionRegion()
 {
+	// Notify interaction component of entering interaction region
 	if (auto* Interaction = GetInteractionComponent()) {
 		Interaction->EnterInteractionRegion();
 	}
@@ -85,8 +86,19 @@ void AIdiomExpressCharacter::OnEnterInteractionRegion()
 	
 void AIdiomExpressCharacter::OnLeaveInteractionRegion()
 {
+	// Notify interaction component of leaving interaction region
 	if (auto* Interaction = GetInteractionComponent()) {
 		Interaction->LeaveInteractionRegion();
+	}
+	
+	// Notify listeners that interactable actors can no longer be aimed at due to leaving the interaction region
+	NotifyAimAtInteractableActor(false);
+}
+
+void AIdiomExpressCharacter::NotifyAimAtInteractableActor(bool IsInAim)
+{
+	if (OnAimAtInteractableActor.IsBound()) {
+		OnAimAtInteractableActor.Broadcast(IsInAim);
 	}
 }
 
@@ -102,7 +114,10 @@ void AIdiomExpressCharacter::DoInteractionLineTrace(bool InteractOnHit)
 	UWorld* World = GetWorld();
 	check(World);
 	
-	// Do line trace	
+	// Assume a miss
+	NotifyAimAtInteractableActor(false);
+	
+	// Do line trace
 	FHitResult TraceResult{};
 	UE_LOG(LogIdiomExpressCharacter, Log, TEXT("Performing interaction line trace"));	
 	if (World->LineTraceSingleByChannel(TraceResult, ViewOrigin, TraceEndPoint, ACTOR_INTERACTION_COLLISION_CHANNEL))
@@ -117,8 +132,10 @@ void AIdiomExpressCharacter::DoInteractionLineTrace(bool InteractOnHit)
 		UE_LOG(LogIdiomExpressCharacter, Log, TEXT("Valid blocking hit found"));
 		if (auto* InteractableActor = Cast<AIdiomExpressInteractableActor>(TraceResult.GetActor()))
 		{
-			// TODO(nemjit001): Display interaction UI by emitting a delegate broadcast?
+			// Notify listeners that the character started aiming at an interactable actor.
+			NotifyAimAtInteractableActor(true);
 			
+			// Trigger an interaction if required.
 			if (InteractOnHit)
 			{
 				UE_LOGF(LogIdiomExpressCharacter, Log,
