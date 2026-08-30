@@ -3,7 +3,6 @@
 
 #include "Player/IdiomExpressPlayerState.h"
 
-#include "Characters/IdiomExpressCharacter.h"
 #include "Game/IdiomExpressGameState.h"
 #include "Player/IdiomExpressPlayerController.h"
 #include "UI/GameplayHudWidget.h"
@@ -19,26 +18,26 @@ void AIdiomExpressPlayerState::BeginPlay()
 	check(World);
 	
 	// Get the player controller for the player state
-	auto* PC = GetPlayerController();
+	auto* PC = Cast<AIdiomExpressPlayerController>(GetPlayerController());
 	if (!PC)
 	{
 		UE_LOGF(LogIdiomExpressPlayerState, Log, "No active player controller found for %ls", *GetName());
 		return;
 	}
 	
-	// Bind to character events
-	if (auto* Character = Cast<AIdiomExpressCharacter>(PC->GetCharacter()))
+	// Get the game state for the owning world
+	auto* GS = World->GetGameState<AIdiomExpressGameState>();
+	if (!GS)
 	{
-		UE_LOGF(LogIdiomExpressPlayerState, Log, "Binding handlers to character ui events for %ls", *Character->GetName());
-		Character->OnAimAtInteractableActor.AddDynamic(this, &AIdiomExpressPlayerState::OnShowInteractionPromptChanged);
+		UE_LOGF(LogIdiomExpressPlayerState, Log, "No active game state found for world %ls", *World->GetName());
+		return;
 	}
 	
+	// Bind to player controller events
+	PC->OnShowInteractionPromptChanged.AddDynamic(this, &AIdiomExpressPlayerState::OnShowInteractionPromptChanged);
+	
 	// Bind to game state events
-	if (auto* GS = World->GetGameState<AIdiomExpressGameState>())
-	{
-		UE_LOGF(LogIdiomExpressPlayerState, Log, "Binding handlers to game state ui events for %ls", *GS->GetName());
-		GS->OnHeldCurrencyAmountChanged.AddDynamic(this, &AIdiomExpressPlayerState::OnHeldCurrencyAmountChanged);
-	}
+	GS->OnHeldCurrencyAmountChanged.AddDynamic(this, &AIdiomExpressPlayerState::OnHeldCurrencyAmountChanged);
 }
 
 bool AIdiomExpressPlayerState::GetShowInteractionPrompt()

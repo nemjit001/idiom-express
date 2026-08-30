@@ -9,9 +9,6 @@
 class UCameraComponent;
 class UIdiomExpressInteractionComponent;
 
-/** Event delegate for notifying listeners that the character is aiming at an interactable actor. */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAimAtInteractableActor, bool, IsInAim);
-
 /**
  * Base Character class for Idiom Express.
  */
@@ -46,20 +43,16 @@ public:
 
 protected:
 	/**
-	 * Notify listeners to show the interaction prompt
-	 * @param IsInAim Set to true if the target interactable is being aimed at.
+	 * Show or hide the interaction prompt.
+	 * @param Show {@code true} to show prompt, {@code false} to hide.
 	 */
-	virtual void NotifyAimAtInteractableActor(bool IsInAim);
+	virtual void ShowInteractionPrompt(bool Show);
 	
 	/**
 	 * Do an interaction line trace from the player's camera.
 	 * @param InteractOnHit Attempt to interact with the hit target on hit.
 	 */
 	virtual void DoInteractionLineTrace(bool InteractOnHit);
-	
-public:
-	UPROPERTY(Category = "Character", BlueprintAssignable)
-	FOnAimAtInteractableActor OnAimAtInteractableActor;
 	
 protected:
 	// Scene components

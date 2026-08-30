@@ -6,6 +6,9 @@
 #include "GameFramework/PlayerController.h"
 #include "IdiomExpressPlayerController.generated.h"
 
+/** Event delegate for notifying listeners that the interaction prompt should be shown. */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShowInteractionPromptChanged, bool, Show);
+
 /**
  * Player Controller for Idiom Express player characters.
  */
@@ -22,12 +25,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player|UI")
 	virtual void TryCreateHud();
 	
+	/** Show the gameplay UI interaction prompt. */
+	UFUNCTION(BlueprintCallable, Category = "Player|UI")
+	virtual void ShowInteractionPrompt(bool Show);
+	
 	/**
 	 * Get the gameplay hud instance.
 	 * @return
 	 */
 	UFUNCTION(BlueprintPure, Category = "Player|UI")
 	virtual class UGameplayHudWidget* GetGameplayHud() const { return GameplayHudInstance; }
+	
+public:
+	UPROPERTY(Category = "Player|UI", BlueprintAssignable)
+	FOnShowInteractionPromptChanged OnShowInteractionPromptChanged;
 	
 protected:
 	UPROPERTY(Category = "Player|Input", BlueprintReadWrite, EditAnywhere)

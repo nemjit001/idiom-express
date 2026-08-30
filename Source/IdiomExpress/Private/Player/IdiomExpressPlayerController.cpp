@@ -74,3 +74,11 @@ void AIdiomExpressPlayerController::TryCreateHud()
 	GameplayHudInstance->ShowInteractionPrompt(PS->GetShowInteractionPrompt());
 	GameplayHudInstance->SetHeldCurrencyAmount(GS->GetHeldCurrencyAmount());
 }
+
+void AIdiomExpressPlayerController::ShowInteractionPrompt(bool Show)
+{
+	// Broadcast show event for interaction prompt
+	if (OnShowInteractionPromptChanged.IsBound()) {
+		OnShowInteractionPromptChanged.Broadcast(Show);
+	}
+}

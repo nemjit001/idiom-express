@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/IdiomExpressInteractionComponent.h"
+#include "Player/IdiomExpressPlayerController.h"
 
 #define CHARACTER_INTERACTION_LINE_TRACE_LENGTH 1'000.0F
 
@@ -91,14 +92,14 @@ void AIdiomExpressCharacter::OnLeaveInteractionRegion()
 		Interaction->LeaveInteractionRegion();
 	}
 	
-	// Notify listeners that interactable actors can no longer be aimed at due to leaving the interaction region
-	NotifyAimAtInteractableActor(false);
+	// Hide interaction prompt
+	ShowInteractionPrompt(false);
 }
 
-void AIdiomExpressCharacter::NotifyAimAtInteractableActor(bool IsInAim)
+void AIdiomExpressCharacter::ShowInteractionPrompt(bool Show)
 {
-	if (OnAimAtInteractableActor.IsBound()) {
-		OnAimAtInteractableActor.Broadcast(IsInAim);
+	if (auto* PC = GetController<AIdiomExpressPlayerController>()) {
+		PC->ShowInteractionPrompt(Show);
 	}
 }
 
@@ -114,8 +115,8 @@ void AIdiomExpressCharacter::DoInteractionLineTrace(bool InteractOnHit)
 	UWorld* World = GetWorld();
 	check(World);
 	
-	// Assume a miss
-	NotifyAimAtInteractableActor(false);
+	// Initially hide interaction prompt
+	ShowInteractionPrompt(false);
 	
 	// Do line trace
 	FHitResult TraceResult{};
@@ -132,8 +133,8 @@ void AIdiomExpressCharacter::DoInteractionLineTrace(bool InteractOnHit)
 		UE_LOG(LogIdiomExpressCharacter, Log, TEXT("Valid blocking hit found"));
 		if (auto* InteractableActor = Cast<AIdiomExpressInteractableActor>(TraceResult.GetActor()))
 		{
-			// Notify listeners that the character started aiming at an interactable actor.
-			NotifyAimAtInteractableActor(true);
+			// Show interaction prompt.
+			ShowInteractionPrompt(true);
 			
 			// Trigger an interaction if required.
 			if (InteractOnHit)
