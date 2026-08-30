@@ -10,6 +10,27 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShowInteractionPromptChanged, bool, Show);
 
 /**
+ * Enumeration of input mapping priorities.
+ */
+UENUM(Blueprintable)
+enum EInputMappingPriority : uint8
+{
+	EInputMappingPriority_GameplayInputMapping 	= 0,
+};
+
+/**
+ * Enumeration of gameplay overlay menus.
+ */
+UENUM(Blueprintable)
+enum EGameplayMenu : uint8
+{
+	EGameplayMenu_None					= 0,
+	EGameplayMenu_BuyIdiomMenu			= 1,
+	EGameplayMenu_SellIdiomMenu			= 2,
+	EGameplayMenu_ConstructIdiomMenu	= 3,
+};
+
+/**
  * Player Controller for Idiom Express player characters.
  */
 UCLASS()
@@ -22,29 +43,35 @@ protected:
 	
 public:
 	/** Attempt to create the player gameplay hud. */
-	UFUNCTION(BlueprintCallable, Category = "Player|UI")
+	UFUNCTION(BlueprintCallable, Category = "PlayerState|UI")
 	virtual void TryCreateHud();
 	
 	/** Show the gameplay UI interaction prompt. */
-	UFUNCTION(BlueprintCallable, Category = "Player|UI")
+	UFUNCTION(BlueprintCallable, Category = "PlayerState|UI")
 	virtual void ShowInteractionPrompt(bool Show);
 	
 	/**
 	 * Get the gameplay hud instance.
 	 * @return
 	 */
-	UFUNCTION(BlueprintPure, Category = "Player|UI")
+	UFUNCTION(BlueprintPure, Category = "PlayerState|UI")
 	virtual class UIdiomExpressGameplayHudWidget* GetGameplayHud() const { return GameplayHudInstance; }
+	
+protected:
+	/** Enable an input mapping context with a priority. */
+	virtual void EnableInputMappingContext(TSoftObjectPtr<class UInputMappingContext> InputMappingContext, EInputMappingPriority priority);
+	
+	/** Remove an enabled mapping context. */
+	virtual void DisableInputMappingContext(TSoftObjectPtr<class UInputMappingContext> InputMappingContext);
 	
 public:
 	UPROPERTY(Category = "Player|UI", BlueprintAssignable)
 	FOnShowInteractionPromptChanged OnShowInteractionPromptChanged;
 	
 protected:
-	UPROPERTY(Category = "Player|Input", BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(Category = "PlayerState|Input", BlueprintReadWrite, EditAnywhere)
 	TSoftObjectPtr<class UInputMappingContext> GameplayInputMapping;
-	
-	UPROPERTY(Category = "Player|UI", BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(Category = "PlayerState|UI", BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<class UIdiomExpressGameplayHudWidget> GameplayHudClass;
 	
 private:

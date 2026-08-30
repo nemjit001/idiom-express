@@ -26,11 +26,27 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Game|Currency")
 	virtual int64 GetHeldCurrencyAmount() const { return CurrentHeldCurrencyAmount; }
 	
+	/** Set the debt amount. */
+	UFUNCTION(BlueprintCallable, Category = "Game|Currency")
+	virtual void SetDebtAmount(int64 Amount);
+	
+	/** Get the held currency amount. */
+	UFUNCTION(BlueprintCallable, Category = "Game|Currency")
+	virtual int64 GetDebtAmount() const { return CurrentDebtAmount; }
+	
+	/** Check if the debt is paid off */
+	UFUNCTION(BlueprintCallable, Category = "Game|Currency")
+	virtual bool IsDebtPaidOff() const { return CurrentDebtAmount <= 0; }
+	
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Game|Events")
 	FOnHeldCurrencyAmountChanged OnHeldCurrencyAmountChanged;
+	UPROPERTY(BlueprintAssignable, Category = "Game|Events")
+	FOnHeldCurrencyAmountChanged OnDebtAmountChanged;
 	
 protected:
 	UPROPERTY(Category = "Game|Currency", BlueprintReadOnly, VisibleAnywhere)
 	int64 CurrentHeldCurrencyAmount = 0;
+	UPROPERTY(Category = "Game|Currency", BlueprintReadOnly, VisibleAnywhere)
+	int64 CurrentDebtAmount = 0;
 };

@@ -14,7 +14,7 @@ void AIdiomExpressPlayerState::BeginPlay()
 	Super::BeginPlay();
 	
 	// Get owning world for the player state
-	UWorld* World = GetWorld();
+	UWorld const* World = GetWorld();
 	check(World);
 	
 	// Get the player controller for the player state
@@ -38,21 +38,22 @@ void AIdiomExpressPlayerState::BeginPlay()
 	
 	// Bind to game state events
 	GS->OnHeldCurrencyAmountChanged.AddDynamic(this, &AIdiomExpressPlayerState::OnHeldCurrencyAmountChanged);
+	GS->OnDebtAmountChanged.AddDynamic(this, &AIdiomExpressPlayerState::OnDebtAmountChanged);
 }
 
-bool AIdiomExpressPlayerState::GetShowInteractionPrompt()
+bool AIdiomExpressPlayerState::GetShowInteractionPrompt() const
 {
 	return ShowInteractionPrompt;
 }
 
-int64 AIdiomExpressPlayerState::GetHeldCurrencyAmount()
+int64 AIdiomExpressPlayerState::GetHeldCurrencyAmount() const
 {
 	// Get owning world
-	UWorld* World = GetWorld();
+	UWorld const* World = GetWorld();
 	check(World);
 	
 	// Get game state
-	if (auto* GS = World->GetGameState<AIdiomExpressGameState>()) {
+	if (auto const* GS = World->GetGameState<AIdiomExpressGameState>()) {
 		return GS->GetHeldCurrencyAmount();
 	}
 	
@@ -77,11 +78,23 @@ void AIdiomExpressPlayerState::OnShowInteractionPromptChanged(bool Show)
 void AIdiomExpressPlayerState::OnHeldCurrencyAmountChanged(int64 Value)
 {
 	// Update gameplay hud
-	if (auto* PC = Cast<AIdiomExpressPlayerController>(GetPlayerController()))
+	if (auto const* PC = Cast<AIdiomExpressPlayerController>(GetPlayerController()))
 	{
 		if (UIdiomExpressGameplayHudWidget* GameplayHud = PC->GetGameplayHud())
 		{
 			GameplayHud->SetHeldCurrencyAmount(Value);
+		}
+	}
+}
+
+void AIdiomExpressPlayerState::OnDebtAmountChanged(int64 Value)
+{
+	// Update gameplay hud
+	if (auto const* PC = Cast<AIdiomExpressPlayerController>(GetPlayerController()))
+	{
+		if (UIdiomExpressGameplayHudWidget* GameplayHud = PC->GetGameplayHud())
+		{
+			GameplayHud->SetDebtAmount(Value);
 		}
 	}
 }

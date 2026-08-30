@@ -19,4 +19,6 @@ public:
 	void ShowInteractionPrompt(bool Show);
 	UFUNCTION(BlueprintImplementableEvent, Category = "UI|Gameplay")
 	void SetHeldCurrencyAmount(int64 Value);
+	UFUNCTION(BlueprintImplementableEvent, Category = "UI|Gameplay")
+	void SetDebtAmount(int64 Value);
 };

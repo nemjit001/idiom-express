@@ -15,22 +15,8 @@ void AIdiomExpressPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// Validate input mapping contexts
-	if (GameplayInputMapping.IsNull())
-	{
-		UE_LOG(LogIdiomExpressPlayerController, Error, TEXT("GameplayInputMapping must not be null!"));
-		return;
-	}
-	
-	// Add input mapping contexts
-	if (auto* LocalPlayer = GetLocalPlayer())
-	{
-		if (auto* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-		{
-			UE_LOG(LogIdiomExpressPlayerController, Log, TEXT("Enabled GameplayInputMapping context"));
-			InputSystem->AddMappingContext(GameplayInputMapping.LoadSynchronous(), 0);
-		}
-	}
+	// Enable default input mapping context
+	EnableInputMappingContext(GameplayInputMapping, EInputMappingPriority_GameplayInputMapping);
 	
 	// Create gameplay HUD
 	TryCreateHud();
@@ -51,16 +37,16 @@ void AIdiomExpressPlayerController::TryCreateHud()
 	}
 	
 	// Get the owning world
-	UWorld* World = GetWorld();
+	UWorld const* World = GetWorld();
 	check(World);
 	
 	// Get the player state and game state for populating UI
-	auto* PS = GetPlayerState<AIdiomExpressPlayerState>();
+	auto const* PS = GetPlayerState<AIdiomExpressPlayerState>();
 	if (!PS) {
 		return;
 	}
 	
-	auto* GS = World->GetGameState<AIdiomExpressGameState>();
+	auto const* GS = World->GetGameState<AIdiomExpressGameState>();
 	if (!GS) {
 		return;
 	}
@@ -73,6 +59,7 @@ void AIdiomExpressPlayerController::TryCreateHud()
 	// Set initial gameplay HUD state
 	GameplayHudInstance->ShowInteractionPrompt(PS->GetShowInteractionPrompt());
 	GameplayHudInstance->SetHeldCurrencyAmount(GS->GetHeldCurrencyAmount());
+	GameplayHudInstance->SetDebtAmount(GS->GetDebtAmount());
 }
 
 void AIdiomExpressPlayerController::ShowInteractionPrompt(bool Show)
@@ -80,5 +67,45 @@ void AIdiomExpressPlayerController::ShowInteractionPrompt(bool Show)
 	// Broadcast show event for interaction prompt
 	if (OnShowInteractionPromptChanged.IsBound()) {
 		OnShowInteractionPromptChanged.Broadcast(Show);
+	}
+}
+
+void AIdiomExpressPlayerController::EnableInputMappingContext(TSoftObjectPtr<UInputMappingContext> InputMappingContext, EInputMappingPriority priority)
+{
+	// Validate input mapping context
+	if (InputMappingContext.IsNull())
+	{
+		UE_LOG(LogIdiomExpressPlayerController, Error, TEXT("Input mapping context must not be null!"));
+		return;
+	}
+	
+	// Add input mapping context
+	if (auto* LocalPlayer = GetLocalPlayer())
+	{
+		if (auto* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+		{
+			UE_LOG(LogIdiomExpressPlayerController, Log, TEXT("Enabled input mapping context"));
+			InputSystem->AddMappingContext(InputMappingContext.LoadSynchronous(), priority);
+		}
+	}
+}
+
+void AIdiomExpressPlayerController::DisableInputMappingContext(TSoftObjectPtr<UInputMappingContext> InputMappingContext)
+{
+	// Validate input mapping context
+	if (InputMappingContext.IsNull())
+	{
+		UE_LOG(LogIdiomExpressPlayerController, Error, TEXT("Input mapping context must not be null!"));
+		return;
+	}
+	
+	// Remove input mapping context
+	if (auto* LocalPlayer = GetLocalPlayer())
+	{
+		if (auto* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+		{
+			UE_LOG(LogIdiomExpressPlayerController, Log, TEXT("Disabled context"));
+			InputSystem->RemoveMappingContext(InputMappingContext.LoadSynchronous());
+		}
 	}
 }
