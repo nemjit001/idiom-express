@@ -5,7 +5,7 @@
 
 #include "Game/IdiomExpressGameState.h"
 #include "Player/IdiomExpressPlayerController.h"
-#include "UI/GameplayHudWidget.h"
+#include "UI/IdiomExpressGameplayHudWidget.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogIdiomExpressPlayerState, Log, Log);
 
@@ -67,7 +67,7 @@ void AIdiomExpressPlayerState::OnShowInteractionPromptChanged(bool Show)
 	// Update gameplay hud
 	if (auto* PC = Cast<AIdiomExpressPlayerController>(GetPlayerController()))
 	{
-		if (UGameplayHudWidget* GameplayHud = PC->GetGameplayHud())
+		if (UIdiomExpressGameplayHudWidget* GameplayHud = PC->GetGameplayHud())
 		{
 			GameplayHud->ShowInteractionPrompt(Show);
 		}
@@ -79,7 +79,7 @@ void AIdiomExpressPlayerState::OnHeldCurrencyAmountChanged(int64 Value)
 	// Update gameplay hud
 	if (auto* PC = Cast<AIdiomExpressPlayerController>(GetPlayerController()))
 	{
-		if (UGameplayHudWidget* GameplayHud = PC->GetGameplayHud())
+		if (UIdiomExpressGameplayHudWidget* GameplayHud = PC->GetGameplayHud())
 		{
 			GameplayHud->SetHeldCurrencyAmount(Value);
 		}

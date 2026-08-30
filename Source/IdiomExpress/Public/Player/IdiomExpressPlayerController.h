@@ -34,7 +34,7 @@ public:
 	 * @return
 	 */
 	UFUNCTION(BlueprintPure, Category = "Player|UI")
-	virtual class UGameplayHudWidget* GetGameplayHud() const { return GameplayHudInstance; }
+	virtual class UIdiomExpressGameplayHudWidget* GetGameplayHud() const { return GameplayHudInstance; }
 	
 public:
 	UPROPERTY(Category = "Player|UI", BlueprintAssignable)
@@ -45,9 +45,9 @@ protected:
 	TSoftObjectPtr<class UInputMappingContext> GameplayInputMapping;
 	
 	UPROPERTY(Category = "Player|UI", BlueprintReadWrite, EditAnywhere)
-	TSubclassOf<class UGameplayHudWidget> GameplayHudClass;
+	TSubclassOf<class UIdiomExpressGameplayHudWidget> GameplayHudClass;
 	
 private:
 	UPROPERTY(Transient)
-	TObjectPtr<class UGameplayHudWidget> GameplayHudInstance;
+	TObjectPtr<class UIdiomExpressGameplayHudWidget> GameplayHudInstance;
 };

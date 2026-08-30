@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "GameplayHudWidget.generated.h"
+#include "IdiomExpressGameplayHudWidget.generated.h"
 
 /**
  * Base widget for the Gameplay HUD of Idiom Express.
  */
 UCLASS()
-class IDIOMEXPRESS_API UGameplayHudWidget : public UUserWidget
+class IDIOMEXPRESS_API UIdiomExpressGameplayHudWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
