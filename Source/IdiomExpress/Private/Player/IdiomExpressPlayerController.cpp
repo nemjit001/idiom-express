@@ -20,6 +20,9 @@ void AIdiomExpressPlayerController::BeginPlay()
 	
 	// Create gameplay HUD
 	TryCreateHud();
+	
+	// Enable game input
+	EnableGameInput();
 }
 
 void AIdiomExpressPlayerController::TryCreateHud()
@@ -68,6 +71,28 @@ void AIdiomExpressPlayerController::ShowInteractionPrompt(bool Show)
 	if (OnShowInteractionPromptChanged.IsBound()) {
 		OnShowInteractionPromptChanged.Broadcast(Show);
 	}
+}
+
+void AIdiomExpressPlayerController::EnableGameInput()
+{
+	// Set input mode to game only
+	FInputModeGameOnly GameOnlyMode{};
+	GameOnlyMode.SetConsumeCaptureMouseDown(true);
+	SetInputMode(GameOnlyMode);
+	
+	// Hide mouse cursor
+	SetShowMouseCursor(false);
+}
+
+void AIdiomExpressPlayerController::EnableUIInput()
+{
+	// Set input mode to ui only
+	FInputModeUIOnly UIOnlyMode{};
+	UIOnlyMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockInFullscreen);
+	SetInputMode(UIOnlyMode);
+	
+	// Show mouse cursor
+	SetShowMouseCursor(true);
 }
 
 void AIdiomExpressPlayerController::EnableInputMappingContext(TSoftObjectPtr<UInputMappingContext> InputMappingContext, EInputMappingPriority priority)

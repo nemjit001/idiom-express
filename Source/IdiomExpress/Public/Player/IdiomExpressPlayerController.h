@@ -43,18 +43,24 @@ protected:
 	
 public:
 	/** Attempt to create the player gameplay hud. */
-	UFUNCTION(BlueprintCallable, Category = "PlayerState|UI")
+	UFUNCTION(BlueprintCallable, Category = "PlayerController|UI")
 	virtual void TryCreateHud();
 	
 	/** Show the gameplay UI interaction prompt. */
-	UFUNCTION(BlueprintCallable, Category = "PlayerState|UI")
+	UFUNCTION(BlueprintCallable, Category = "PlayerController|UI")
 	virtual void ShowInteractionPrompt(bool Show);
+	
+	UFUNCTION(BlueprintCallable, Category = "PlayerController|UI")
+	virtual void EnableGameInput();
+	
+	UFUNCTION(BlueprintCallable, Category = "PlayerController|UI")
+	virtual void EnableUIInput();	
 	
 	/**
 	 * Get the gameplay hud instance.
 	 * @return
 	 */
-	UFUNCTION(BlueprintPure, Category = "PlayerState|UI")
+	UFUNCTION(BlueprintCallable, Category = "PlayerController|UI")
 	virtual class UIdiomExpressGameplayHudWidget* GetGameplayHud() const { return GameplayHudInstance; }
 	
 protected:
@@ -65,13 +71,13 @@ protected:
 	virtual void DisableInputMappingContext(TSoftObjectPtr<class UInputMappingContext> InputMappingContext);
 	
 public:
-	UPROPERTY(Category = "Player|UI", BlueprintAssignable)
+	UPROPERTY(Category = "PlayerController|UI", BlueprintAssignable)
 	FOnShowInteractionPromptChanged OnShowInteractionPromptChanged;
 	
 protected:
-	UPROPERTY(Category = "PlayerState|Input", BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(Category = "PlayerController|UI", BlueprintReadWrite, EditAnywhere)
 	TSoftObjectPtr<class UInputMappingContext> GameplayInputMapping;
-	UPROPERTY(Category = "PlayerState|UI", BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(Category = "PlayerController|UI", BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<class UIdiomExpressGameplayHudWidget> GameplayHudClass;
 	
 private:
