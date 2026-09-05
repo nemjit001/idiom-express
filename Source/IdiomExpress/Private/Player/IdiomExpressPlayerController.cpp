@@ -7,7 +7,7 @@
 #include "InputMappingContext.h"
 #include "Game/IdiomExpressGameState.h"
 #include "Player/IdiomExpressPlayerState.h"
-#include "UI/IdiomExpressGameplayHudWidget.h"
+#include "UI/IdiomExpressGameplayHud.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogIdiomExpressPlayerController, Log, Log);
 
@@ -56,7 +56,7 @@ void AIdiomExpressPlayerController::TryCreateHud()
 	
 	// Create HUD widget instance
 	UE_LOGF(LogIdiomExpressPlayerController, Log, "Creating GameplayHudClass for player controller %ls", *GetName());
-	GameplayHudInstance = CreateWidget<UIdiomExpressGameplayHudWidget>(this, GameplayHudClass);
+	GameplayHudInstance = CreateWidget<UIdiomExpressGameplayHud>(this, GameplayHudClass);
 	GameplayHudInstance->AddToViewport();
 	
 	// Set initial gameplay HUD state

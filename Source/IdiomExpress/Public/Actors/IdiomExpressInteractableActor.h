@@ -34,9 +34,12 @@ public:
 	virtual void OnLeaveInteractionRegion(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex);
 	
+	UFUNCTION(BlueprintCallable, Category = "Actor|Interaction")
+	virtual void OnInteraction(class AIdiomExpressCharacter* Character);
+	
 	/** Handle the interaction event for this interactable object. */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Actor|Interaction")
-	void OnInteraction(class AIdiomExpressCharacter* Character);
+	void OnInteractionEvent(class AIdiomExpressCharacter* Character);
 	
 protected:	
 	UPROPERTY(Category = "Actor", BlueprintReadOnly, VisibleAnywhere)

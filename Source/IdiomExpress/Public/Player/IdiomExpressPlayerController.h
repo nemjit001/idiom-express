@@ -61,7 +61,7 @@ public:
 	 * @return
 	 */
 	UFUNCTION(BlueprintCallable, Category = "PlayerController|UI")
-	virtual class UIdiomExpressGameplayHudWidget* GetGameplayHud() const { return GameplayHudInstance; }
+	virtual class UIdiomExpressGameplayHud* GetGameplayHud() const { return GameplayHudInstance; }
 	
 protected:
 	/** Enable an input mapping context with a priority. */
@@ -78,9 +78,9 @@ protected:
 	UPROPERTY(Category = "PlayerController|UI", BlueprintReadWrite, EditAnywhere)
 	TSoftObjectPtr<class UInputMappingContext> GameplayInputMapping;
 	UPROPERTY(Category = "PlayerController|UI", BlueprintReadWrite, EditAnywhere)
-	TSubclassOf<class UIdiomExpressGameplayHudWidget> GameplayHudClass;
+	TSubclassOf<class UIdiomExpressGameplayHud> GameplayHudClass;
 	
 private:
 	UPROPERTY(Transient)
-	TObjectPtr<class UIdiomExpressGameplayHudWidget> GameplayHudInstance;
+	TObjectPtr<class UIdiomExpressGameplayHud> GameplayHudInstance;
 };

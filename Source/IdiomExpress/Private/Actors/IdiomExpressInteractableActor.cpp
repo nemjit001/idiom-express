@@ -81,3 +81,8 @@ void AIdiomExpressInteractableActor::OnLeaveInteractionRegion(
 		Character->OnLeaveInteractionRegion();
 	}
 }
+
+void AIdiomExpressInteractableActor::OnInteraction(class AIdiomExpressCharacter* Character)
+{
+	OnInteractionEvent(Character);
+}
